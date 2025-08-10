@@ -89,11 +89,32 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>قائمة المهام</h1>
-        <input type="text" id="taskInput" placeholder="أدخل مهمة جديدة...">
-        <button onclick="addTask()">إضافة</button>
-        <ul id="taskList"></ul>
+    <form id="lostPersonForm">
+    <label for="id">ت الترقيم:</label>
+    <input type="text" id="id" name="id" required><br><br>
+
+    <label for="name">الاسم:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="governorate">المحافظة:</label>
+    <input type="text" id="governorate" name="governorate"><br><br>
+
+    <label for="age">العمر:</label>
+    <input type="number" id="age" name="age"><br><br>
+
+    <label for="phone">رقم الهاتف:</label>
+    <input type="tel" id="phone" name="phone"><br><br>
+
+    <label for="status">موقف التائه:</label>
+    <input type="text" id="status" name="status"><br><br>
+
+    <label for="notes">الملاحظات:</label>
+    <textarea id="notes" name="notes"></textarea><br><br>
+
+    <button type="submit">إضافة مهمة</button>
+</form>
+
+<div id="lostPersonsList">
     </div>
 
     <script>
@@ -178,3 +199,4 @@
     </script>
 </body>
 </html>
+
