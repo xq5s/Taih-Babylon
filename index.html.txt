@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق قائمة المهام</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            direction: rtl;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"] {
+            width: calc(100% - 70px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            text-align: right;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .delete-btn {
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #c9302c;
+        }
+        .edit-btn {
+            background-color: #f0ad4e;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .edit-btn:hover {
+            background-color: #ec971f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>قائمة المهام</h1>
+        <input type="text" id="taskInput" placeholder="أدخل مهمة جديدة...">
+        <button onclick="addTask()">إضافة</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+        });
+
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskText = taskInput.value.trim();
+
+            if (taskText !== '') {
+                createTaskElement(taskText);
+                saveTasks();
+                taskInput.value = '';
+            }
+        }
+
+        function createTaskElement(taskText) {
+            const taskList = document.getElementById('taskList');
+            const li = document.createElement('li');
+            
+            const taskSpan = document.createElement('span');
+            taskSpan.textContent = taskText;
+            taskSpan.addEventListener('click', () => {
+                li.classList.toggle('completed');
+                saveTasks();
+            });
+
+            const btnContainer = document.createElement('div');
+            
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-btn';
+            editBtn.textContent = 'تعديل';
+            editBtn.onclick = () => {
+                const newText = prompt('تعديل المهمة:', taskSpan.textContent);
+                if (newText !== null && newText.trim() !== '') {
+                    taskSpan.textContent = newText.trim();
+                    saveTasks();
+                }
+            };
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = 'حذف';
+            deleteBtn.onclick = () => {
+                li.remove();
+                saveTasks();
+            };
+            
+            btnContainer.appendChild(editBtn);
+            btnContainer.appendChild(deleteBtn);
+            
+            li.appendChild(taskSpan);
+            li.appendChild(btnContainer);
+            
+            taskList.appendChild(li);
+        }
+
+        function saveTasks() {
+            const taskList = document.getElementById('taskList');
+            const tasks = [];
+            taskList.querySelectorAll('li').forEach(li => {
+                tasks.push({
+                    text: li.querySelector('span').textContent,
+                    completed: li.classList.contains('completed')
+                });
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => {
+                createTaskElement(task.text);
+                const lastLi = document.getElementById('taskList').lastChild;
+                if (task.completed) {
+                    lastLi.classList.add('completed');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
